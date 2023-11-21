@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>РК2</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>РК2</h1>
+<p>Дан массив чисел arr_w. Определить минимум массива и поместить на место первого отрицарицательного элемента. Если такого элемента нет, вставить элемент перед первым элементом массива.</p>
+
+<form id="arrayForm">
+  <label for="numbers">Введите числа (через запятую - например 1, 2, 3):</label><br>
+  <input type="text" id="numbers" name="numbers"><br><br>
+  <input type="submit" value="Обработка">
+</form>
+
+<div id="result"></div>
+
+<script>
+    $(document).ready(function(){
+        $('#arrayForm').submit(function(event){
+            event.preventDefault();
+            var numbers = $('#numbers').val().split(',').map(function(item) {
+                return parseFloat(item.trim());
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '/process_array',
+                contentType: 'application/json',
+                data: JSON.stringify({ numbers: numbers }),
+                success: function(response) {
+                    $('#result').html(
+                      '<p>Original Array: ' + response.original_array.join(', ') + '</p>' +
+                      '<p>Modified Array: ' + response.modified_array.join(', ') + '</p>'
+                    );
+                },
+                error: function(xhr, status, error) {
+                    var errorMessage = xhr.responseJSON.error || 'Error occurred.';
+                    $('#result').html('<p>Error: ' + errorMessage + '</p>');
+                    alert('ОШИБКА ВВОДА')
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
